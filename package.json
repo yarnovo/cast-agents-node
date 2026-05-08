@@ -1,0 +1,22 @@
+{
+  "name": "cast-agents-node",
+  "version": "0.0.1",
+  "description": "PoC: pi (earendil-works) + AgentRun · Node.js agent runtime · 1-day spike to validate killing 11+ Python repos",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node code/index.js",
+    "poc:verify1": "node code/verify1_pi_dashscope.js",
+    "poc:verify3": "node code/verify3_sandbox_api.js"
+  },
+  "dependencies": {
+    "@agentrun/sdk": "^0.0.5",
+    "@earendil-works/pi-agent-core": "^0.74.0",
+    "@earendil-works/pi-ai": "^0.74.0",
+    "express": "^4.21.2",
+    "undici": "^7.19.1"
+  }
+}

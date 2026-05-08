@@ -1,0 +1,40 @@
+# Serverless Devs 配置 · AgentRun 高代码模式部署 ·
+# 使用方式:
+#   1. npm install -g @serverless-devs/s
+#   2. s config add  # 配 AccessKeyId / AccessKeySecret · 别名 agentrun-deploy
+#   3. 老板/lead 已开通 AgentRun 服务 + 创建好 agentRunRole RAM 角色
+#      参考 https://help.aliyun.com/zh/functioncompute/fc/create-agent-by-code-high-code
+#   4. s build && s deploy -a agentrun-deploy
+#
+# 部署成功后会拿到 endpoint URL · 形如:
+#   https://{ACCOUNT_ID}.agentrun-data.cn-hangzhou.aliyuncs.com/agent-runtimes/cast-agents-node-poc/endpoints/prod/invocations
+edition: 3.0.0
+name: cast-agents-node-poc
+access: agentrun-deploy
+
+vars:
+  region: cn-hangzhou
+  agentRuntimeName: cast-agents-node-poc
+
+resources:
+  cast-agents-node:
+    component: agentrun-runtime
+    props:
+      region: ${vars.region}
+      agentRuntimeName: ${vars.agentRuntimeName}
+      # AgentRun 自动创建的 RAM 角色 · 必须先在控制台开通 AgentRun 服务时建好
+      role: acs:ram::${env(AGENTRUN_ACCOUNT_ID)}:role/agentRunRole
+      cpu: 1
+      memory: 2048
+      port: 9000
+      language: nodejs20
+      # 高代码模式 · 启动命令 · 必须监听 0.0.0.0:9000
+      startCommand:
+        - node
+        - code/index.js
+      codePath: ./
+      environmentVariables:
+        AKONG_LLM_API_KEY: ${env(AKONG_LLM_API_KEY)}
+        AKONG_LLM_BASE_URL: https://dashscope.aliyuncs.com/compatible-mode/v1
+        AKONG_LLM_MODEL: deepseek-v3.1
+        NODE_ENV: production

@@ -1,0 +1,6 @@
+node_modules/
+.env
+.vault/
+*.log
+poc-logs/
+.DS_Store
